@@ -226,8 +226,9 @@ let repeatMode = "all"; // "all" | "one" | "off"
 // PLAYLIST
 // ============================
 const playlist = [
-  { name: "River Flows in You — Yiruma", file: "assets/music/river.mp3" },
-  { name: "Kiss the Rain — Yiruma", file: "assets/music/kiss.mp3" }
+    { name: "一人で大丈夫にならなきゃ - Hitoridedaijobuni Naranakya", file: "assets/music/hn.mp3" },
+    { name: "River Flows in You — Yiruma", file: "assets/music/river.mp3" },
+    { name: "Kiss the Rain — Yiruma", file: "assets/music/kiss.mp3" }
 ];
 
 // ============================
