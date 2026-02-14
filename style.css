@@ -52,7 +52,7 @@ nav {
 
 nav.scrolled {
     padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 6);
-    background: rgba(26, 26, 26, 0.98);
+    background: rgba(26, 26, 26, 0.95);
 }
 
 nav .nav-container {
