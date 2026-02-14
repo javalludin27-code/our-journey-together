@@ -227,8 +227,7 @@ let repeatMode = "all"; // "all" | "one" | "off"
 // ============================
 const playlist = [
   { name: "River Flows in You — Yiruma", file: "assets/music/river.mp3" },
-  { name: "Kiss the Rain — Yiruma", file: "assets/music/kiss.mp3" },
-  { name: "Nuvole Bianche — Ludovico Einaudi", file: "assets/music/nuvole.mp3" }
+  { name: "Kiss the Rain — Yiruma", file: "assets/music/kiss.mp3" }
 ];
 
 // ============================
