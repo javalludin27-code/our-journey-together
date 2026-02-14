@@ -1,3 +1,55 @@
+// Gunakan localStorage jika ada, kalau nggak pakai default dari file
+let notesData = JSON.parse(localStorage.getItem('notesData')) || [    
+    {
+        text: "Bersamamu, setiap hari adalah petualangan baru. Terima kasih telah menjadi alasan senyumku dan membuat hidup ini lebih bermakna.",
+        author: "Your Love"
+    },
+    {
+        text: "Dalam keheningan malam atau keriuhan hari, hatimu adalah rumah ternyaman bagiku. Aku bersyukur untuk setiap momen bersamamu.",
+        author: "Forever Yours"
+    }
+];
+
+// Render notes ke grid
+function renderNotes() {
+    const grid = document.getElementById('notesGrid');
+    grid.innerHTML = '';
+    notesData.forEach(note => {
+        const card = document.createElement('div');
+        card.className = 'note-card visible';
+        card.innerHTML = `
+            <p class="note-text">${note.text}</p>
+            <div class="note-author">— ${note.author}</div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+// Render awal
+renderNotes();
+
+// Modal handling
+export function openModal() {
+    document.getElementById('noteModal').style.display = 'flex';
+}
+
+export function closeModal() {
+    document.getElementById('noteModal').style.display = 'none';
+    document.getElementById('noteText').value = '';
+    document.getElementById('noteAuthor').value = '';
+}
+
+export function saveNote() {
+    const text = document.getElementById('noteText').value.trim();
+    const author = document.getElementById('noteAuthor').value.trim() || 'Anonymous';
+    if (!text) return alert('Tulis pesan dulu!');
+
+    notesData.push({ text, author });
+    localStorage.setItem('notesData', JSON.stringify(notesData));
+    renderNotes();
+    closeModal();
+}
+
 // Navigation scroll effect
 window.addEventListener('scroll', () => {
     const navbar = document.getElementById('navbar');
@@ -9,7 +61,7 @@ window.addEventListener('scroll', () => {
 });
 
 // Counter - tanggal hubungan kalian
-const startDate = new Date('2026-01-31T00:00:00');
+const startDate = new Date('2007-04-14T00:00:00');
 
 function updateCounter() {
     const now = new Date();
@@ -88,37 +140,6 @@ document.querySelectorAll('.timeline-item, .gallery-item, .note-card').forEach(e
     observer.observe(el);
 });
 
-// Modal functions
-function openModal() {
-    document.getElementById('noteModal').style.display = 'flex';
-}
-
-function closeModal() {
-    document.getElementById('noteModal').style.display = 'none';
-    document.getElementById('noteText').value = '';
-    document.getElementById('noteAuthor').value = '';
-}
-
-function saveNote() {
-    const text = document.getElementById('noteText').value;
-    const author = document.getElementById('noteAuthor').value || 'Anonymous';
-
-    if (text.trim() === '') {
-        alert('Mohon tulis pesan terlebih dahulu');
-        return;
-    }
-
-    const notesGrid = document.getElementById('notesGrid');
-    const noteCard = document.createElement('div');
-    noteCard.className = 'note-card visible';
-    noteCard.innerHTML = `
-                <p class="note-text">${text}</p>
-                <div class="note-author">— ${author}</div>
-            `;
-
-    notesGrid.appendChild(noteCard);
-    closeModal();
-}
 
 // Close modal on outside click
 document.getElementById('noteModal').addEventListener('click', function (e) {
@@ -187,3 +208,13 @@ function setActiveLink() {
 window.addEventListener("scroll", () => requestAnimationFrame(setActiveLink));
 window.addEventListener("resize", setActiveLink);
 window.addEventListener("load", setActiveLink);
+
+// Ambil tombol dan modal buttons
+const addNoteButton = document.getElementById('addNoteButton');
+const cancelButton = document.querySelector('.btn-cancel');
+const saveButton = document.querySelector('.btn-save');
+
+// Tambahkan event listener
+addNoteButton.addEventListener('click', openModal);
+cancelButton.addEventListener('click', closeModal);
+saveButton.addEventListener('click', saveNote);
