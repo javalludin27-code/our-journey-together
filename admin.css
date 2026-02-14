@@ -192,7 +192,7 @@ nav .logo {
 
 /* Footer */
 footer {
-    padding: calc(var(--spacing-unit)*8);
+    padding: calc(var(--spacing-unit) * 9);
     text-align: center;
     border-top: 1px solid rgba(212,175,55,0.1);
     background: var(--secondary-dark);
