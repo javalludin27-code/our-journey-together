@@ -223,24 +223,24 @@ nav a.active::after {
 
 .scroll-indicator span {
     display: block;
-    width: 20px;
-    height: 35px;
-    border: 2px solid var(--accent-gold);
-    border-radius: 20px;
-    position: relative;
+    width: 24px;
+    height: 24px;
+    border-left: 2px solid var(--accent-gold);
+    border-bottom: 2px solid var(--accent-gold);
+    transform: rotate(-45deg);
+    margin: 0 auto;
+    animation: arrowBounce 1.5s infinite;
 }
 
-.scroll-indicator span::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 8px;
-    background: var(--accent-gold);
-    border-radius: 2px;
-    animation: scroll 2s ease-in-out infinite;
+@keyframes arrowBounce {
+    0%, 100% {
+        transform: rotate(-45deg) translateY(0);
+        opacity: 0.6;
+    }
+    50% {
+        transform: rotate(-45deg) translateY(10px);
+        opacity: 1;
+    }
 }
 
 @keyframes fadeIn {
