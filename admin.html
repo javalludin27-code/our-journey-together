@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Our Journey Together</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Admin</div>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="section-header">
+            <div class="section-label">Admin Panel</div>
+            <h2 class="section-title">Kelola Pesan Cinta</h2>
+        </div>
+
+        <!-- Login Section -->
+        <div id="loginSection">
+            <input type="password" id="adminPassword" placeholder="Masukkan password admin" class="modal-input">
+            <button id="loginBtn" class="cta-button">Login</button>
+            <div id="loginMsg"></div>
+        </div>
+
+        <!-- Admin Section -->
+        <div id="adminSection" class="hidden">
+            <h3 class="section-label">Daftar Pesan</h3>
+            <div id="notesList" class="notes-grid"></div>
+
+            <h3 class="section-label">Tambah Pesan Baru</h3>
+            <input type="text" id="newText" placeholder="Isi pesan" class="modal-input">
+            <input type="text" id="newAuthor" placeholder="Nama Pengirim" class="modal-input">
+            <button id="addNoteBtn" class="cta-button">Tambah Pesan</button>
+            <button id="deleteAllBtn" class="cta-button" style="border-color:red;color:red;">Hapus Semua Pesan</button>
+
+            <button id="logoutBtn" class="cta-button">Logout</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Our Journey Together · Admin Panel</p>
+    </footer>
+
+    <script src="admin.js"></script>
+</body>
+</html>
