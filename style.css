@@ -32,6 +32,19 @@ body {
     cursor: default;
 }
 
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: url('noise.png');
+    opacity: 0.03;
+}
+
+body.lock-scroll {
+    overflow: hidden;
+}
+
 a,
 button {
     cursor: pointer;
@@ -50,9 +63,13 @@ nav {
     transition: all 0.3s ease;
 }
 
+nav {
+    transition: all 0.4s cubic-bezier(.4, 0, .2, 1);
+}
+
 nav.scrolled {
     padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 6);
-    background: rgba(26, 26, 26, 0.95);
+    background: rgba(26, 26, 26, 0.85);
 }
 
 nav .nav-container {
@@ -233,10 +250,13 @@ nav a.active::after {
 }
 
 @keyframes arrowBounce {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: rotate(-45deg) translateY(0);
         opacity: 0.6;
     }
+
     50% {
         transform: rotate(-45deg) translateY(10px);
         opacity: 1;
@@ -313,6 +333,10 @@ nav a.active::after {
     color: var(--accent-gold);
     display: block;
     margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+.counter-number {
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
 .counter-label {
@@ -457,9 +481,10 @@ nav a.active::after {
     overflow: hidden;
     background: var(--secondary-dark);
     border: 1px solid rgba(212, 175, 55, 0.2);
-    transition: all 0.4s ease;
+    transition: border-color 0.4s ease, transform 0.4s ease, opacity 0.6s ease;
     opacity: 0;
     transform: translateY(30px);
+    cursor: pointer;
 }
 
 .gallery-item.visible {
@@ -469,36 +494,53 @@ nav a.active::after {
 
 .gallery-item:hover {
     border-color: var(--accent-gold);
-    transform: translateY(-10px);
+    transform: translateY(-8px);
 }
 
-.gallery-placeholder {
+/* Image */
+.gallery-item img {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(184, 117, 117, 0.1));
-    transition: all 0.4s ease;
+    object-fit: cover;
+    transition: transform 0.7s ease;
 }
 
-.gallery-item:hover .gallery-placeholder {
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(184, 117, 117, 0.15));
+.gallery-item:hover img {
+    transform: scale(1.08);
 }
 
-.gallery-icon {
-    font-size: 3rem;
-    margin-bottom: calc(var(--spacing-unit) * 2);
-    opacity: 0.6;
-}
-
+/* Caption inside image */
 .gallery-caption {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    color: var(--text-light);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: calc(var(--spacing-unit) * 4);
     text-align: center;
-    padding: calc(var(--spacing-unit) * 3);
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.75),
+            rgba(0, 0, 0, 0.4),
+            transparent);
+    color: var(--text-light);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.gallery-item:hover .gallery-caption {
+    opacity: 1;
+}
+
+.gallery-caption h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.gallery-caption span {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
 }
 
 /* Notes Section */
@@ -536,7 +578,7 @@ nav a.active::after {
     content: '"';
     position: absolute;
     top: calc(var(--spacing-unit) * 2);
-    left: calc(var(--spacing-unit) * 4);
+    left: calc(var(--spacing-unit) * 3);
     font-family: 'Libre Baskerville', serif;
     font-size: 6rem;
     color: var(--accent-rose);
@@ -890,3 +932,165 @@ footer p {
     }
 }
 
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 3000;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.lightbox-img {
+    max-width: 90%;
+    max-height: 85%;
+    border: 2px solid var(--accent-gold);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    font-size: 40px;
+    color: var(--accent-gold);
+    cursor: pointer;
+}
+
+/* Music */
+.music-wrapper {
+    position: fixed;
+    bottom: 15px;
+    right: 0;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+/* SATU BAR UTUH */
+.music-bar {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(14px);
+    /* border-radius: 30px 0 0 30px; */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    transition: transform .4s ease;
+}
+
+/* saat hidden */
+.music-wrapper.hidden .music-bar {
+    transform: translateX(calc(100% - 48px));
+}
+
+/* slide button */
+.slide-btn {
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* content sebelah kanan */
+.music-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+}
+
+/* tombol icon */
+.music-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.music-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: #333;
+    stroke-width: 2;
+    fill: none;
+}
+
+.music-info {
+    overflow: hidden;
+    width: 130px;
+}
+
+.music-title {
+    white-space: nowrap;
+    display: inline-block;
+    animation: marquee 10s linear infinite;
+    font-size: 13px;
+    color: #333;
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+#volumeControl {
+    width: 70px;
+}
+
+/* MOBILE VERSION */
+@media (max-width: 768px) {
+
+    .music-player {
+        min-width: 250px;
+        gap: 8px;
+        padding: 8px 14px;
+    }
+
+    .music-info {
+        width: 90px;
+    }
+
+    #volumeControl {
+        display: none;
+        /* sembunyikan volume di mobile */
+    }
+
+}
+
+/* Repeat state indicator */
+.repeat-all svg {
+    stroke: #333;
+}
+
+.repeat-one svg {
+    stroke: #b88e5f;
+}
+
+.repeat-off svg {
+    stroke: #ccc;
+    opacity: 0.5;
+}
+
+/* Slide rotate animation */
+.slide-btn {
+    transition: transform .3s ease;
+}
+
+.slide-btn.rotated {
+    transform: rotate(180deg);
+}
+
+/* Hover effect */
+.music-btn:hover svg {
+    stroke: #b88e5f;
+    transition: .2s;
+}

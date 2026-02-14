@@ -28,23 +28,18 @@ function fetchNotesFromDB() {
 function renderNotes() {
     const grid = document.getElementById('notesGrid');
     grid.innerHTML = '';
+
     notesData.forEach(note => {
         const card = document.createElement('div');
-        card.className = 'note-card'; // jangan langsung visible
+        card.className = 'note-card';
+
         card.innerHTML = `
             <p class="note-text">${note.text}</p>
             <div class="note-author">— ${note.author}</div>
         `;
-        grid.appendChild(card);
 
-        // biarkan observer yang menambahkan .visible
+        grid.appendChild(card);
         observer.observe(card);
-
-        card.innerHTML = `
-            <p class="note-text">${note.text}</p>
-            <div class="note-author">— ${note.author}</div>
-        `;
-        grid.appendChild(card);
     });
 }
 
@@ -122,7 +117,7 @@ window.addEventListener("resize", setActiveLink);
 window.addEventListener("load", setActiveLink);
 
 // ======================== Counter ========================
-const startDate = new Date('2007-04-14T00:00:00');
+const startDate = new Date('2026-01-31T00:00:00');
 
 function updateCounter() {
     const now = new Date();
@@ -174,3 +169,162 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('noteModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
 });
+
+// ======================== Gallery Lightbox ========================
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+const closeBtn = document.querySelector(".lightbox-close");
+
+document.querySelectorAll(".gallery-item img").forEach(img => {
+    img.addEventListener("click", () => {
+        lightbox.style.display = "flex";
+        lightboxImg.src = img.src;
+
+        // LOCK SCROLL SAAT OPEN
+        document.body.classList.add("lock-scroll");
+    });
+});
+
+function closeLightbox() {
+    lightbox.style.display = "none";
+
+    // BALIKIN SCROLL SAAT CLOSE
+    document.body.classList.remove("lock-scroll");
+}
+
+closeBtn.addEventListener("click", closeLightbox);
+
+lightbox.addEventListener("click", e => {
+    if (e.target === lightbox) {
+        closeLightbox();
+    }
+});
+
+// ============================
+// ELEMENT
+// ============================
+const audio = document.getElementById("bgMusic");
+const toggleBtn = document.getElementById("musicToggle");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const volumeControl = document.getElementById("volumeControl");
+const title = document.getElementById("musicTitle");
+const wrapper = document.getElementById("musicWrapper");
+const slideBtn = document.getElementById("musicSlideBtn");
+const repeatBtn = document.getElementById("repeatBtn");
+const playIcon = document.getElementById("playIcon");
+const pauseIcon = document.getElementById("pauseIcon");
+
+// ============================
+// STATE
+// ============================
+let currentTrack = 0;
+let isPlaying = false;
+let repeatMode = "all"; // "all" | "one" | "off"
+
+// ============================
+// PLAYLIST
+// ============================
+const playlist = [
+  { name: "River Flows in You — Yiruma", file: "assets/music/river.mp3" },
+  { name: "Kiss the Rain — Yiruma", file: "assets/music/kiss.mp3" },
+  { name: "Nuvole Bianche — Ludovico Einaudi", file: "assets/music/nuvole.mp3" }
+];
+
+// ============================
+// FUNCTIONS
+// ============================
+function loadTrack(index) {
+  audio.src = playlist[index].file;
+  title.textContent = playlist[index].name;
+}
+
+function playMusic() {
+  audio.play().catch(() => {});
+  playIcon.style.display = "none";
+  pauseIcon.style.display = "block";
+  isPlaying = true;
+}
+
+function pauseMusic() {
+  audio.pause();
+  playIcon.style.display = "block";
+  pauseIcon.style.display = "none";
+  isPlaying = false;
+}
+
+function nextTrack() {
+  currentTrack = (currentTrack + 1) % playlist.length;
+  loadTrack(currentTrack);
+  if (isPlaying) playMusic();
+}
+
+function prevTrack() {
+  currentTrack =
+    (currentTrack - 1 + playlist.length) % playlist.length;
+  loadTrack(currentTrack);
+  if (isPlaying) playMusic();
+}
+
+function updateRepeatUI() {
+  repeatBtn.classList.remove("repeat-all", "repeat-one", "repeat-off");
+  repeatBtn.classList.add(`repeat-${repeatMode}`);
+}
+
+// ============================
+// EVENTS
+// ============================
+
+toggleBtn.addEventListener("click", () => {
+  isPlaying ? pauseMusic() : playMusic();
+});
+
+nextBtn.addEventListener("click", nextTrack);
+prevBtn.addEventListener("click", prevTrack);
+
+repeatBtn.addEventListener("click", () => {
+  if (repeatMode === "all") repeatMode = "one";
+  else if (repeatMode === "one") repeatMode = "off";
+  else repeatMode = "all";
+
+  updateRepeatUI();
+});
+
+audio.addEventListener("ended", () => {
+  if (repeatMode === "one") {
+    playMusic();
+  } else if (repeatMode === "all") {
+    nextTrack();
+    playMusic();
+  } else {
+    pauseMusic();
+  }
+});
+
+volumeControl.addEventListener("input", () => {
+  audio.volume = volumeControl.value;
+});
+
+slideBtn.addEventListener("click", () => {
+  wrapper.classList.toggle("hidden");
+  slideBtn.classList.toggle("rotated");
+});
+
+audio.addEventListener("error", () => {
+  console.warn("Audio gagal dimuat. Cek path file.");
+});
+
+document.addEventListener("click", function initAutoPlay() {
+  if (!isPlaying) {
+    playMusic();
+  }
+  document.removeEventListener("click", initAutoPlay);
+});
+
+// ============================
+// INIT
+// ============================
+audio.volume = 0.2;
+loadTrack(currentTrack);
+updateRepeatUI();
+
