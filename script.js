@@ -30,7 +30,16 @@ function renderNotes() {
     grid.innerHTML = '';
     notesData.forEach(note => {
         const card = document.createElement('div');
-        card.className = 'note-card visible';
+        card.className = 'note-card'; // jangan langsung visible
+        card.innerHTML = `
+            <p class="note-text">${note.text}</p>
+            <div class="note-author">— ${note.author}</div>
+        `;
+        grid.appendChild(card);
+
+        // biarkan observer yang menambahkan .visible
+        observer.observe(card);
+
         card.innerHTML = `
             <p class="note-text">${note.text}</p>
             <div class="note-author">— ${note.author}</div>
